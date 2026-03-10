@@ -1,5 +1,5 @@
 // Contract configuration - Update this after deploying your contract
-const CONTRACT_ADDRESS = "YOUR_CONTRACT_ADDRESS_HERE"; // Replace after deployment
+const CONTRACT_ADDRESS = "0x0CaC8C7A4F1Da3e88FC77c8c217c0a50703EBaD5"; // Deployed contract
 const EXPECTED_CHAIN_ID = 1337; // Ganache default chain ID (use 5777 for older Ganache)
 
 const CONTRACT_ABI = [
