@@ -1,0 +1,32 @@
+{
+  "name": "mylabcoin",
+  "version": "1.0.0",
+  "description": "MyLabCoin (MLC) - An ERC-20 token implementation with a web dashboard",
+  "main": "truffle-config.js",
+  "scripts": {
+    "compile": "truffle compile",
+    "migrate": "truffle migrate --network development",
+    "migrate:reset": "truffle migrate --reset --network development",
+    "test": "truffle test",
+    "console": "truffle console --network development",
+    "lint:sol": "solhint 'contracts/**/*.sol'",
+    "serve": "npx http-server ./client -p 3000 -o"
+  },
+  "keywords": [
+    "ethereum",
+    "solidity",
+    "erc20",
+    "token",
+    "blockchain",
+    "smart-contract",
+    "truffle"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "truffle": "^5.11.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
