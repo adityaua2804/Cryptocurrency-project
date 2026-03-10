@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MyLabCoin (MLC) Token Dashboard - Transfer and manage your MLC tokens">
+    <title>MyLabCoin (MLC) - Token Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon" aria-hidden="true">MLC</div>
+                <h1>MyLabCoin</h1>
+            </div>
+            <button id="connectBtn" class="btn btn-primary" aria-describedby="wallet-status">
+                Connect Wallet
+            </button>
+        </header>
+
+        <!-- Network Warning -->
+        <div id="networkWarning" class="network-warning hidden" role="alert">
+            <span class="warning-icon" aria-hidden="true">!</span>
+            <span>Wrong network detected. Please switch to Ganache.</span>
+        </div>
+
+        <!-- Connection Status -->
+        <div id="connectionStatus" class="status-bar hidden" role="status" aria-live="polite">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span id="wallet-status">Connected: </span>
+            <span id="walletAddress">Not connected</span>
+        </div>
+
+        <!-- Main Content -->
+        <main id="main-content" class="main-content">
+            <!-- Token Info Card -->
+            <section class="card token-info" aria-labelledby="token-info-heading">
+                <h2 id="token-info-heading">Token Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="label" id="name-label">Name</span>
+                        <span class="value" id="tokenName" aria-labelledby="name-label">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label" id="symbol-label">Symbol</span>
+                        <span class="value" id="tokenSymbol" aria-labelledby="symbol-label">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label" id="decimals-label">Decimals</span>
+                        <span class="value" id="tokenDecimals" aria-labelledby="decimals-label">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label" id="supply-label">Total Supply</span>
+                        <span class="value" id="totalSupply" aria-labelledby="supply-label">-</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Balance Card -->
+            <section class="card balance-card" aria-labelledby="balance-heading">
+                <h2 id="balance-heading">Your Balance</h2>
+                <div class="balance-display">
+                    <span id="userBalance" class="balance-amount" aria-live="polite">0.00</span>
+                    <span class="balance-symbol">MLC</span>
+                </div>
+            </section>
+
+            <!-- Transfer Card -->
+            <section class="card transfer-card" aria-labelledby="transfer-heading">
+                <h2 id="transfer-heading">Transfer Tokens</h2>
+                <form id="transferForm" novalidate>
+                    <div class="form-group">
+                        <label for="transferTo">Recipient Address</label>
+                        <input
+                            type="text"
+                            id="transferTo"
+                            placeholder="0x..."
+                            required
+                            autocomplete="off"
+                            spellcheck="false"
+                            aria-describedby="transferTo-error"
+                        >
+                        <span id="transferTo-error" class="input-error hidden" role="alert"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="transferAmount">Amount (MLC)</label>
+                        <div class="input-with-button">
+                            <input
+                                type="text"
+                                inputmode="decimal"
+                                id="transferAmount"
+                                placeholder="0.00"
+                                required
+                                autocomplete="off"
+                                aria-describedby="transferAmount-error"
+                            >
+                            <button type="button" id="maxBtn" class="btn btn-small" aria-label="Use maximum balance">
+                                MAX
+                            </button>
+                        </div>
+                        <span id="transferAmount-error" class="input-error hidden" role="alert"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">Send Tokens</button>
+                </form>
+            </section>
+
+            <!-- Approve Card -->
+            <section class="card approve-card" aria-labelledby="approve-heading">
+                <h2 id="approve-heading">Approve Spender</h2>
+                <form id="approveForm" novalidate>
+                    <div class="form-group">
+                        <label for="spenderAddress">Spender Address</label>
+                        <input
+                            type="text"
+                            id="spenderAddress"
+                            placeholder="0x..."
+                            required
+                            autocomplete="off"
+                            spellcheck="false"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="approveAmount">Allowance Amount (MLC)</label>
+                        <input
+                            type="text"
+                            inputmode="decimal"
+                            id="approveAmount"
+                            placeholder="0.00"
+                            required
+                            autocomplete="off"
+                        >
+                    </div>
+                    <button type="submit" class="btn btn-secondary btn-full">Approve</button>
+                </form>
+            </section>
+
+            <!-- Check Allowance Card -->
+            <section class="card allowance-card" aria-labelledby="allowance-heading">
+                <h2 id="allowance-heading">Check Allowance</h2>
+                <form id="allowanceForm" novalidate>
+                    <div class="form-group">
+                        <label for="ownerAddress">Owner Address</label>
+                        <input
+                            type="text"
+                            id="ownerAddress"
+                            placeholder="0x..."
+                            required
+                            autocomplete="off"
+                            spellcheck="false"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="spenderCheck">Spender Address</label>
+                        <input
+                            type="text"
+                            id="spenderCheck"
+                            placeholder="0x..."
+                            required
+                            autocomplete="off"
+                            spellcheck="false"
+                        >
+                    </div>
+                    <button type="submit" class="btn btn-secondary btn-full">Check Allowance</button>
+                </form>
+                <div id="allowanceResult" class="result-display hidden" aria-live="polite">
+                    <span class="label">Allowance:</span>
+                    <span id="allowanceValue" class="value">0.00 MLC</span>
+                </div>
+            </section>
+        </main>
+
+        <!-- Transaction Status -->
+        <div id="txStatus" class="tx-status hidden" role="alert" aria-live="polite">
+            <div class="tx-content">
+                <span id="txMessage">Processing transaction...</span>
+                <button id="closeTx" class="close-btn" aria-label="Close notification">&times;</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>MyLabCoin Token Dashboard - BCL Project</p>
+        </footer>
+    </div>
+
+    <!-- Web3.js with SRI hash for security -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"
+        integrity="sha384-TQXQM3MrdPrLvRHQ2T5b8zcZKxqE3sTpOCqJZJVQD4G2ziwpwWQN+0l7vDz3TIYm"
+        crossorigin="anonymous"
+    ></script>
+    <script src="app.js"></script>
+</body>
+</html>
