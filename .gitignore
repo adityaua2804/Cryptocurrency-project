@@ -4,40 +4,19 @@ node_modules/
 # Build artifacts
 build/
 
-# Environment files
+# Environment
 .env
 .env.local
 .env.*.local
+.secret
 
-# IDE and editor
+# IDE
 .idea/
 .vscode/
-*.swp
-*.swo
-*~
 
-# OS files
+# OS
 .DS_Store
 Thumbs.db
 
-# Debug and logs
+# Logs
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Truffle
-.secret
-
-# Coverage
-coverage/
-coverage.json
-
-# TypeScript
-*.tsbuildinfo
-
-# Optional npm cache
-.npm
-
-# Optional eslint cache
-.eslintcache
