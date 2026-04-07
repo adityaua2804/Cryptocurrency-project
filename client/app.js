@@ -264,8 +264,37 @@ function isValidAmount(value) {
     return !isNaN(num) && num >= 0 && isFinite(num);
 }
 
+// Switch Account
+async function switchAccount() {
+    try {
+        setButtonLoading(connectBtn, true, 'Switching...');
+        await window.ethereum.request({
+            method: 'wallet_requestPermissions',
+            params: [{ eth_accounts: {} }]
+        });
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        if (accounts.length > 0) {
+            userAccount = accounts[0];
+            walletAddress.textContent = formatAddress(userAccount);
+            await updateBalance();
+            showTxStatus('Account switched successfully!', 'success');
+        }
+    } catch (error) {
+        if (error.code !== 4001) {
+            showTxStatus(parseError(error), 'error');
+        }
+    } finally {
+        setButtonLoading(connectBtn, false, 'Switch Account');
+    }
+}
+
 // Connect Wallet
 async function connectWallet() {
+    if (userAccount) {
+        await switchAccount();
+        return;
+    }
+
     if (typeof window.ethereum === 'undefined') {
         showTxStatus('Please install MetaMask to use this dApp', 'error');
         return;
@@ -298,8 +327,10 @@ async function connectWallet() {
         contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
 
         // Update UI
-        connectBtn.textContent = 'Connected';
-        connectBtn.disabled = true;
+        connectBtn.textContent = 'Switch Account';
+        connectBtn.disabled = false;
+        connectBtn.classList.remove('btn-primary');
+        connectBtn.classList.add('btn-secondary');
         connectionStatus.classList.remove('hidden');
         walletAddress.textContent = formatAddress(userAccount);
 
@@ -393,6 +424,8 @@ async function handleAccountChange(accounts) {
         userBalanceWei = BigInt(0);
         connectBtn.textContent = 'Connect Wallet';
         connectBtn.disabled = false;
+        connectBtn.classList.remove('btn-secondary');
+        connectBtn.classList.add('btn-primary');
         connectionStatus.classList.add('hidden');
         userBalanceEl.textContent = '0.00';
         showTxStatus('Wallet disconnected', 'error');
