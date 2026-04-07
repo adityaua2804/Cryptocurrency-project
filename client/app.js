@@ -264,29 +264,52 @@ function isValidAmount(value) {
     return !isNaN(num) && num >= 0 && isFinite(num);
 }
 
-// Switch Account
+// Switch Account — show custom in-page account picker
 async function switchAccount() {
-    try {
-        setButtonLoading(connectBtn, true, 'Switching...');
-        await window.ethereum.request({
-            method: 'wallet_requestPermissions',
-            params: [{ eth_accounts: {} }]
-        });
-        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-        if (accounts.length > 0) {
-            userAccount = accounts[0];
-            walletAddress.textContent = formatAddress(userAccount);
+    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+    if (!accounts.length) return;
+
+    const modal = document.getElementById('accountModal');
+    const list  = document.getElementById('accountList');
+
+    list.innerHTML = '';
+
+    for (const addr of accounts) {
+        let bal = '...';
+        try {
+            const raw = await web3.eth.getBalance(addr);
+            bal = parseFloat(web3.utils.fromWei(raw, 'ether')).toFixed(3) + ' ETH';
+        } catch {}
+
+        const li = document.createElement('li');
+        li.className = 'account-item' + (addr.toLowerCase() === userAccount.toLowerCase() ? ' active' : '');
+
+        li.innerHTML = `
+            <div class="account-avatar">${addr.slice(2,4).toUpperCase()}</div>
+            <div class="account-info">
+                <span class="account-addr">${formatAddress(addr)}</span>
+                <span class="account-bal">${bal}</span>
+            </div>`;
+
+        li.addEventListener('click', async () => {
+            userAccount = addr;
+            walletAddress.textContent = formatAddress(addr);
             await updateBalance();
-            showTxStatus('Account switched successfully!', 'success');
-        }
-    } catch (error) {
-        if (error.code !== 4001) {
-            showTxStatus(parseError(error), 'error');
-        }
-    } finally {
-        setButtonLoading(connectBtn, false, 'Switch Account');
+            showTxStatus('Switched to ' + formatAddress(addr), 'success');
+            modal.classList.add('hidden');
+        });
+
+        list.appendChild(li);
     }
+
+    modal.classList.remove('hidden');
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('closeModal').addEventListener('click', () => {
+        document.getElementById('accountModal').classList.add('hidden');
+    });
+});
 
 // Connect Wallet
 async function connectWallet() {
@@ -309,8 +332,12 @@ async function connectWallet() {
     setButtonLoading(connectBtn, true, 'Connecting...');
 
     try {
-        // Request account access
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        // Request account access — requestPermissions lets user pick multiple accounts
+        await window.ethereum.request({
+            method: 'wallet_requestPermissions',
+            params: [{ eth_accounts: {} }]
+        });
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
         userAccount = accounts[0];
 
         // Initialize Web3

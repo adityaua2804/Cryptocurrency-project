@@ -173,6 +173,17 @@
             </section>
         </main>
 
+        <!-- Account Switcher Modal -->
+        <div id="accountModal" class="modal-overlay hidden">
+            <div class="modal-box">
+                <div class="modal-header">
+                    <h3>Select Account</h3>
+                    <button id="closeModal" class="close-btn" aria-label="Close">&times;</button>
+                </div>
+                <ul id="accountList" class="account-list"></ul>
+            </div>
+        </div>
+
         <!-- Transaction Status -->
         <div id="txStatus" class="tx-status hidden" role="alert" aria-live="polite">
             <div class="tx-content">
